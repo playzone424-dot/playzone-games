@@ -1,0 +1,136 @@
+<!DOCTYPE html><html>
+<head>
+  <title>Typing Battle Game</title>
+  <style>
+    body {
+      font-family: Arial;
+      text-align: center;
+      background: #0f172a;
+      color: white;
+      padding: 20px;
+    }h1 {
+  color: #38bdf8;
+}
+
+#word {
+  font-size: 32px;
+  margin: 20px;
+  color: #22c55e;
+}
+
+input {
+  padding: 10px;
+  font-size: 18px;
+  width: 220px;
+  text-align: center;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 18px;
+  margin-top: 15px;
+  background: #38bdf8;
+  border: none;
+  color: black;
+  cursor: pointer;
+}
+
+.box {
+  margin: 10px;
+}
+
+  </style>
+</head><body><h1>⌨️ Typing Battle</h1><div class="box">Level: <span id="level">1</span>/10</div>
+<div class="box">Score: <span id="score">0</span></div>
+<div class="box">Time: <span id="time">5</span>s</div><div id="word">Click Start</div><input type="text" id="input" placeholder="Type here..." disabled><br>
+<button onclick="startGame()">Start Game</button><script>
+let level = 1;
+let score = 0;
+let time = 5;
+let timer;
+
+const levels = {
+  1: ["cat","dog","sun","pen"],
+  2: ["game","code","play","fast"],
+  3: ["speed","level","score","focus"],
+  4: ["typing","battle","winner","timer"],
+  5: ["challenge","keyboard","monitor"],
+  6: ["javascript","function","variable"],
+  7: ["developer","internet","software"],
+  8: ["application","performance","database"],
+  9: ["programming","optimization","framework"],
+  10:["synchronization","multiplayer","architecture"]
+};
+
+function getRandomWord() {
+  let words = levels[level];
+  return words[Math.floor(Math.random() * words.length)];
+}
+
+function startGame() {
+  level = 1;
+  score = 0;
+  time = 5;
+
+  document.getElementById("input").disabled = false;
+  document.getElementById("input").focus();
+
+  updateUI();
+  newWord();
+  startTimer();
+}
+
+function updateUI() {
+  document.getElementById("level").innerText = level;
+  document.getElementById("score").innerText = score;
+  document.getElementById("time").innerText = time;
+}
+
+function newWord() {
+  document.getElementById("word").innerText = getRandomWord();
+}
+
+function startTimer() {
+  clearInterval(timer);
+  timer = setInterval(() => {
+    time--;
+    updateUI();
+
+    if (time <= 0) {
+      clearInterval(timer);
+      alert("💀 Game Over! Score: " + score);
+      document.getElementById("input").disabled = true;
+    }
+  }, 1000);
+}
+
+document.getElementById("input").addEventListener("input", function() {
+  let typed = this.value;
+  let currentWord = document.getElementById("word").innerText;
+
+  if (typed === currentWord) {
+    score++;
+    this.value = "";
+
+    // Level progression (every 3 correct words)
+    if (score % 3 === 0) {
+      level++;
+
+      if (level > 10) {
+        clearInterval(timer);
+        alert("🏆 YOU WIN! Final Score: " + score);
+        document.getElementById("input").disabled = true;
+        return;
+      }
+
+      time = 5 - Math.floor(level / 2); // harder timer
+      if (time < 2) time = 2;
+    }
+
+    time += 1; // reward
+    updateUI();
+    newWord();
+  }
+});
+</script></body>
+</html>
