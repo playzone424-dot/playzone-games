@@ -79,7 +79,10 @@ function nextRound() {
   box.style.display = "none";
   canClick = false;
 
-  let delay = Math.random() * (3000 - level * 200) + 500;
+  let maxDelay = 3000 - (level * 200);
+if (maxDelay < 800) maxDelay = 800;
+
+let delay = Math.random() * maxDelay + 500;
 
   setTimeout(() => {
     box.style.display = "block";
